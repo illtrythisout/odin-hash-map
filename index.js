@@ -265,6 +265,18 @@ class HashMap {
     // If key does not exist, add a new key-value pair
     const newEntry = { [key]: value };
     bucket.append(newEntry);
+
+    // Grow bucket array when too many entries
+    if (this.entries().length > this.capacity * this.loadFactor) {
+      let currentEntries = this.entries();
+
+      this.capacity = 2 * this.capacity;
+      this.buckets = new Array(this.capacity).fill(null);
+
+      for (let i = 0; i < currentEntries.length; i++) {
+        this.set(currentEntries[i][0], currentEntries[i][1]);
+      }
+    }
   }
 
   get(key) {
@@ -355,7 +367,7 @@ class HashMap {
   }
 
   clear() {
-    this.buckets.fill(null);
+    this.buckets = new Array(capacity).fill(null);
   }
 
   keys() {
