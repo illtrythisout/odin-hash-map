@@ -314,4 +314,31 @@ class HashMap {
 
     return false;
   }
+
+  remove(key) {
+    const index = this.hash(key);
+
+    // Get the LinkedList at this index
+    const bucket = this.buckets[index];
+
+    if (bucket === null) {
+      return false;
+    }
+
+    let currentNode = bucket.head;
+    // Iterate through the LinkedList to check if the key exists
+    let objIndex = 0;
+    while (currentNode !== null) {
+      const nodeValue = currentNode.value;
+      if (nodeValue.hasOwnProperty(key)) {
+        // If key exists, delete it and return true
+        bucket.removeAt(objIndex);
+        return true;
+      }
+      objIndex++;
+      currentNode = currentNode.next;
+    }
+
+    return false;
+  }
 }
