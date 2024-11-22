@@ -290,4 +290,28 @@ class HashMap {
 
     return null;
   }
+
+  has(key) {
+    const index = this.hash(key);
+
+    // Get the LinkedList at this index
+    const bucket = this.buckets[index];
+
+    if (bucket === null) {
+      return false;
+    }
+
+    let currentNode = bucket.head;
+    // Iterate through the LinkedList to check if the key exists
+    while (currentNode !== null) {
+      const nodeValue = currentNode.value;
+      if (nodeValue.hasOwnProperty(key)) {
+        // If key exists, return true
+        return true;
+      }
+      currentNode = currentNode.next;
+    }
+
+    return false;
+  }
 }
