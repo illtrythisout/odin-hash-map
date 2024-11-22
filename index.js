@@ -179,38 +179,38 @@ class LinkedList {
   }
 
   removeAt(index) {
+    if (index < 0 || index >= this.size) {
+      throw new Error('Index out of bounds');
+    }
+
     let currentNode = this.head;
     let returnValue;
 
-    // saves value of node to be removed for return
     if (index === 0) {
+      // Removing the head
       returnValue = this.head.value;
-    }
+      this.head = this.head.next;
 
-    if (index === 0) {
-      // checks if this.head needs to be updated
-      this.head = currentNode.next;
-    }
-    // loops to the node before the index
-    for (let i = 0; i < index - 1; i++) {
-      currentNode = currentNode.next;
-    }
+      if (this.head === null) {
+        // If the list is now empty, update the tail
+        this.tail = null;
+      }
+    } else {
+      // Find the node before the one we want to remove
+      for (let i = 0; i < index - 1; i++) {
+        currentNode = currentNode.next;
+      }
 
-    // saves value of node to be removed for return
-    if (index !== 0) {
       returnValue = currentNode.next.value;
-    }
+      currentNode.next = currentNode.next.next;
 
-    // removes node right after the node before the index
-    currentNode.next = currentNode.next.next;
-
-    // checks if this.tail needs to be updated
-    if (index === this.size - 1) {
-      this.tail = currentNode;
+      if (currentNode.next === null) {
+        // If removing the tail, update it
+        this.tail = currentNode;
+      }
     }
 
     this.size--;
-
     return returnValue;
   }
 }
@@ -334,21 +334,61 @@ class HashMap {
     const bucket = this.buckets[index];
 
     if (bucket === null) {
-      return false;
+      return false; // Key not found
     }
 
     let currentNode = bucket.head;
-    // Iterate through the LinkedList to check if the key exists
+    let previousNode = null;
     let objIndex = 0;
+
+    // Iterate through the LinkedList to check if the key exists
     while (currentNode !== null) {
       const nodeValue = currentNode.value;
+
       if (nodeValue.hasOwnProperty(key)) {
-        // If key exists, delete it and return true
-        bucket.removeAt(objIndex);
-        return true;
+        // Found the key; remove it
+        if (previousNode === null) {
+          // Removing the head
+          bucket.head = currentNode.next;
+          if (bucket.head === null) {
+            // If it was the only node, also update tail
+            bucket.tail = null;
+          }
+        } else {
+          // Removing a middle or tail node
+          previousNode.next = currentNode.next;
+          if (currentNode.next === null) {
+            // Update tail if it was the last node
+            bucket.tail = previousNode;
+          }
+        }
+
+        bucket.size--;
+
+        // If the bucket is now empty, reset it
+        if (bucket.size === 0) {
+          this.buckets[index] = null;
+        }
+
+        // shrink bucket array when too many entries
+        if (this.entries().length <= (this.capacity / 2) * this.loadFactor) {
+          let currentEntries = this.entries();
+
+          this.capacity = this.capacity / 2;
+          this.buckets = new Array(this.capacity).fill(null);
+
+          for (let i = 0; i < currentEntries.length; i++) {
+            this.set(currentEntries[i][0], currentEntries[i][1]);
+          }
+        }
+
+        return true; // Successfully removed
       }
-      objIndex++;
+
+      // Update pointers
+      previousNode = currentNode;
       currentNode = currentNode.next;
+      objIndex++;
     }
 
     return false;
@@ -434,3 +474,18 @@ class HashMap {
     return entries;
   }
 }
+
+const test = new HashMap(); // or HashMap() if using a factory
+test.set('apple', 'red');
+test.set('banana', 'yellow');
+test.set('carrot', 'orange');
+test.set('dog', 'brown');
+test.set('elephant', 'gray');
+test.set('frog', 'green');
+test.set('grape', 'purple');
+test.set('hat', 'black');
+test.set('ice cream', 'white');
+test.set('jacket', 'blue');
+test.set('kite', 'pink');
+test.set('lion', 'golden');
+test.set('moon', 'silver');
