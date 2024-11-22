@@ -266,4 +266,28 @@ class HashMap {
     const newEntry = { [key]: value };
     bucket.append(newEntry);
   }
+
+  get(key) {
+    const index = this.hash(key);
+
+    // Get the LinkedList at this index
+    const bucket = this.buckets[index];
+
+    if (bucket === null) {
+      return null;
+    }
+
+    let currentNode = bucket.head;
+    // Iterate through the LinkedList to check if the key exists
+    while (currentNode !== null) {
+      const nodeValue = currentNode.value;
+      if (nodeValue.hasOwnProperty(key)) {
+        // If key exists, return it's value
+        return currentNode.value[key];
+      }
+      currentNode = currentNode.next;
+    }
+
+    return null;
+  }
 }
