@@ -353,4 +353,8 @@ class HashMap {
 
     return length;
   }
+
+  clear() {
+    this.buckets.fill(null);
+  }
 }
