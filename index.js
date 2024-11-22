@@ -341,4 +341,16 @@ class HashMap {
 
     return false;
   }
+
+  length() {
+    let length = 0;
+
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.buckets[i] !== null) {
+        length += this.buckets[i].size;
+      }
+    }
+
+    return length;
+  }
 }
