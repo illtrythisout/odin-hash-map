@@ -397,4 +397,28 @@ class HashMap {
 
     return values;
   }
+
+  entries() {
+    let entries = [];
+
+    // loops through all buckets
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.buckets[i] !== null) {
+        // Get the LinkedList at this index
+        const bucket = this.buckets[i];
+        let currentNode = bucket.head;
+        // Iterate through the LinkedList and push entries to the entries array
+        while (currentNode !== null) {
+          let entry = [
+            Object.keys(currentNode.value)[0],
+            Object.values(currentNode.value)[0],
+          ];
+          entries.push(entry);
+          currentNode = currentNode.next;
+        }
+      }
+    }
+
+    return entries;
+  }
 }
