@@ -52,6 +52,10 @@ class LinkedList {
   }
 
   at(index) {
+    if (index < 0 || index >= this.size) {
+      throw new Error('Index out of bounds');
+    }
+
     let currentNode = this.head;
 
     // loops to the node at index and returns it
@@ -94,12 +98,12 @@ class LinkedList {
     }
 
     // loops through the rest of the list
-    do {
-      currentNode = currentNode.next;
+    while (currentNode) {
       if (currentNode.value === value) {
         return true;
       }
-    } while (currentNode.next);
+      currentNode = currentNode.next;
+    }
 
     // if no values are true, return false
     return false;
@@ -130,7 +134,7 @@ class LinkedList {
   toString() {
     // checks list length
     if (this.size === 0) {
-      return;
+      return '';
     }
 
     let currentNode = this.head;
@@ -186,31 +190,36 @@ class LinkedList {
     let currentNode = this.head;
     let returnValue;
 
+    // saves value of node to be removed for return
     if (index === 0) {
       // Removing the head
       returnValue = this.head.value;
-      this.head = this.head.next;
+    }
 
-      if (this.head === null) {
-        // If the list is now empty, update the tail
-        this.tail = null;
-      }
-    } else {
-      // Find the node before the one we want to remove
-      for (let i = 0; i < index - 1; i++) {
-        currentNode = currentNode.next;
-      }
+    if (index === 0) {
+      // checks if this.head needs to be updated
+      this.head = currentNode.next;
+    }
+    // loops to the node before the index
+    for (let i = 0; i < index - 1; i++) {
+      currentNode = currentNode.next;
+    }
 
+    // saves value of node to be removed for return
+    if (index !== 0) {
       returnValue = currentNode.next.value;
-      currentNode.next = currentNode.next.next;
+    }
 
-      if (currentNode.next === null) {
-        // If removing the tail, update it
-        this.tail = currentNode;
-      }
+    // removes node right after the node before the index
+    currentNode.next = currentNode.next.next;
+
+    // checks if this.tail needs to be updated
+    if (index === this.size - 1) {
+      this.tail = currentNode;
     }
 
     this.size--;
+
     return returnValue;
   }
 }
