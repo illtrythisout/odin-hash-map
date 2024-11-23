@@ -380,7 +380,10 @@ class HashMap {
         }
 
         // shrink bucket array when too many entries
-        if (this.entries().length <= (this.capacity / 2) * this.loadFactor) {
+        if (
+          this.entries().length <= (this.capacity / 2) * this.loadFactor &&
+          this.capacity / 2 >= 16
+        ) {
           let currentEntries = this.entries();
 
           this.capacity = this.capacity / 2;
@@ -416,7 +419,7 @@ class HashMap {
   }
 
   clear() {
-    this.buckets = new Array(capacity).fill(null);
+    this.buckets = new Array(this.capacity).fill(null);
   }
 
   keys() {
